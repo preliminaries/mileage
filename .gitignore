@@ -162,4 +162,4 @@ cython_debug/
 .idea/
 
 # Data
-data/mileage_2024_07_01_nhs_scotland.xlsx
+data/raw/mileage_2024_07_01_nhs_scotland.xlsx
