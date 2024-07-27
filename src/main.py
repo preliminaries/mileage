@@ -12,6 +12,7 @@ def main():
     # Logging
     logger: logging.Logger = logging.getLogger(name=__name__)
 
+    # Setting Up
     setup = src.setup.Setup(service=service, s3_parameters=s3_parameters, warehouse=configurations.warehouse)
     state = setup.exc(bucket_name=s3_parameters.internal, prefix=configurations.s3_prefix)
     logger.info(state)
