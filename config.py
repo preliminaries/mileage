@@ -17,5 +17,6 @@ class Config:
         # A S3 parameters template
         self.s3_parameters_template = 'https://raw.githubusercontent.com/preliminaries/.github/master/profile/s3_parameters.yaml'
 
+        self.s3_prefix = 'mileage/'
         self.s3_prefix_raw = 'mileage/raw/'
         self.s3_prefix_points = 'mileage/points/'
