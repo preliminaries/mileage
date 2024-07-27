@@ -17,6 +17,9 @@ def main():
     state = setup.exc(bucket_name=s3_parameters.internal, prefix=configurations.s3_prefix)
     logger.info(state)
 
+    # Hence
+    src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
+
     # Deleting __pycache__
     src.functions.cache.Cache().exc()
 
