@@ -31,8 +31,8 @@ class Egress:
     def __egress(self, key: str, filename: str) -> str:
         """
 
-        :param key:
-        :param filename:
+        :param key: The name of the Amazon S3 (Simple Storage Service) file to unload 
+        :param filename: Where the file will be saved
         :return:
         """
 
