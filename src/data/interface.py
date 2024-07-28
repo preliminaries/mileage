@@ -5,6 +5,7 @@ import logging
 
 import pandas as pd
 
+import src.data.raw
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.csv
@@ -50,3 +51,5 @@ class Interface:
 
         organisations = self.__organisations()
         self.__logger.info(organisations)
+
+        src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters).exc()
