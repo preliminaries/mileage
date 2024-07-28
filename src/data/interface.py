@@ -6,9 +6,10 @@ import logging
 import pandas as pd
 
 import src.data.raw
+import src.data.organisations
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
-import src.s3.csv
+
 
 
 class Interface:
@@ -19,7 +20,7 @@ class Interface:
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
         """
 
-        :param service:
+        :param service: A suite of services for interacting with Amazon Web Services.
         :param s3_parameters:
         """
 
@@ -31,17 +32,7 @@ class Interface:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __organisations(self) -> pd.DataFrame:
-        """
 
-        :return:
-        """
-
-        bucket_name = self.__s3_parameters.external
-        prefix = self.__s3_parameters.path_external_references
-
-        return src.s3.csv.CSV(service=self.__service, bucket_name=bucket_name, prefix=prefix).exc(
-            filename='organisations.csv')
 
     def exc(self):
         """
@@ -49,8 +40,10 @@ class Interface:
         :return:
         """
 
-        organisations = self.__organisations()
+        organisations: pd.DataFrame = src.data.organisations.Organisations(
+            service=self.__service, s3_parameters=self.__s3_parameters).exc()
         self.__logger.info(organisations)
 
-        raw = src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters)
-        raw.exc()
+        raw: list[str] = src.data.raw.Raw(
+            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        self.__logger.info(raw)
