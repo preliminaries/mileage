@@ -52,4 +52,5 @@ class Interface:
         organisations = self.__organisations()
         self.__logger.info(organisations)
 
-        src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        raw = src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters)
+        raw.exc()
