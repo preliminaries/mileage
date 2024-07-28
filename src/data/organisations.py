@@ -39,8 +39,11 @@ class Organisations:
         bucket_name = self.__s3_parameters.external
         prefix = self.__s3_parameters.path_external_references
 
-        return src.s3.csv.CSV(service=self.__service, bucket_name=bucket_name, prefix=prefix).exc(
+        data = src.s3.csv.CSV(
+            service=self.__service, bucket_name=bucket_name, prefix=prefix).exc(
             filename='organisations.csv')
+
+        return data
 
     def exc(self):
         """
