@@ -1,3 +1,4 @@
+"""Module egress.py"""
 import logging
 import pathlib
 
@@ -10,6 +11,9 @@ import src.elements.service as sr
 
 
 class Egress:
+    """
+    For unloading files stored within an Amazon S3 (Simple Storage Service) bucket
+    """
 
     def __init__(self, service: sr.Service, bucket_name):
         """
@@ -31,7 +35,7 @@ class Egress:
     def __egress(self, key: str, filename: str) -> str:
         """
 
-        :param key: The name of the Amazon S3 (Simple Storage Service) file to unload 
+        :param key: The name of the Amazon S3 (Simple Storage Service) file to unload
         :param filename: Where the file will be saved
         :return:
         """
