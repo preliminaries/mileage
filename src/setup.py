@@ -89,8 +89,4 @@ class Setup:
         s3 = self.__s3(bucket_name=bucket_name)
         s3_prefix = self.__s3_prefix(bucket_name=bucket_name, prefix=prefix) if prefix else True
 
-        print(local)
-        print(s3)
-        print(s3_prefix)
-
         return local & s3 & s3_prefix
