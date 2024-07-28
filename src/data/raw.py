@@ -66,7 +66,7 @@ class Raw:
 
         return frame
 
-    def exc(self):
+    def exc(self) -> list[str]:
         """
 
         :return:
@@ -79,4 +79,4 @@ class Raw:
         messages: list[str] = src.s3.egress.Egress(
             service=self.__service, bucket_name=self.__s3_parameters.internal).exc(strings=strings)
 
-        self.__logger.info(messages)
+        return messages
