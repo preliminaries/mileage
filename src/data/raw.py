@@ -1,14 +1,14 @@
-import os
 import logging
+import os
 
 import pandas as pd
 
 import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
-import src.s3.keys
-import src.s3.egress
 import src.functions.directories
+import src.s3.egress
+import src.s3.keys
 
 
 class Raw:
@@ -26,8 +26,9 @@ class Raw:
 
         # Configurations
         self.__configurations = config.Config()
+        self.__storage = self.__configurations.raw_
         src.functions.directories.Directories().create(
-            path=self.__configurations.raw_)
+            path=self.__storage)
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
@@ -61,18 +62,21 @@ class Raw:
         frame = frame.assign(vertex=frame['key'].str.rsplit('/', n=1, expand=True)[1])
 
         # This line construct's the local storage string of each file
-        frame = frame.assign(filename= self.__configurations.raw_ + os.path.sep + frame['vertex'])
+        frame = frame.assign(filename= self.__storage + os.path.sep + frame['vertex'])
 
         return frame
 
     def exc(self):
+        """
+
+        :return:
+        """
 
         keys = self.__keys()
         strings = self.__strings(keys=keys)
 
         # Download
-        messages = src.s3.egress.Egress(
+        messages: list[str] = src.s3.egress.Egress(
             service=self.__service, bucket_name=self.__s3_parameters.internal).exc(strings=strings)
 
-        self.__logger.info(type(messages))
         self.__logger.info(messages)
