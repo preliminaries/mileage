@@ -7,6 +7,8 @@ import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.keys
+import src.s3.egress
+import src.functions.directories
 
 
 class Raw:
@@ -15,7 +17,7 @@ class Raw:
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
-        :param s3_parameters: The overarching S3 parameters settings of this
+        :param s3_parameters: The overarching S3 (Simple Storage Service) parameters settings of this
                               project, e.g., region code name, buckets, etc.
         """
 
@@ -24,23 +26,53 @@ class Raw:
 
         # Configurations
         self.__configurations = config.Config()
+        src.functions.directories.Directories().create(
+            path=self.__configurations.raw_)
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def exc(self):
+    def __keys(self) -> list[str]:
+        """
+
+        :return:
+        """
 
         prefix = self.__configurations.s3_internal_prefix + 'raw/'
 
-        keys = src.s3.keys.Keys(service=self.__service, bucket_name=self.__s3_parameters.internal)
-        objects: list[str] = keys.excerpt(prefix=prefix)
-        self.__logger.info(objects)
+        # The instance for requesting the list of keys within an Amazon S3 bucket
+        objects = src.s3.keys.Keys(
+            service=self.__service, bucket_name=self.__s3_parameters.internal)
 
-        frame = pd.DataFrame(data={'key': objects})
+        return objects.excerpt(prefix=prefix)
+
+    def __strings(self, keys: list[str]) -> pd.DataFrame:
+        """
+
+        :param keys: A list of Amazon S3 keys, i.e., prefix + vertex
+        :return:
+        """
+
+        # A data frame consisting of the S3 keys, and the vertex of each
+        # key, i.e., file name + extension
+        frame = pd.DataFrame(data={'key': keys})
         frame = frame.assign(vertex=frame['key'].str.rsplit('/', n=1, expand=True)[1])
-        self.__logger.info(frame)
 
+        # This line construct's the local storage string of each file
         frame = frame.assign(filename= self.__configurations.raw_ + os.path.sep + frame['vertex'])
-        self.__logger.info(frame)
+
+        return frame
+
+    def exc(self):
+
+        keys = self.__keys()
+        strings = self.__strings(keys=keys)
+
+        # Download
+        messages = src.s3.egress.Egress(
+            service=self.__service, bucket_name=self.__s3_parameters.internal).exc(strings=strings)
+
+        self.__logger.info(type(messages))
+        self.__logger.info(messages)
