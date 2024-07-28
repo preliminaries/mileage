@@ -1,4 +1,7 @@
+import os
 import logging
+
+import pandas as pd
 
 import config
 import src.elements.s3_parameters as s3p
@@ -32,5 +35,9 @@ class Raw:
         prefix = self.__configurations.s3_prefix + 'raw/'
 
         keys = src.s3.keys.Keys(service=self.__service, bucket_name=self.__s3_parameters.internal)
-        objects = keys.excerpt(prefix=prefix)
+        objects: list[str] = keys.excerpt(prefix=prefix)
         self.__logger.info(objects)
+
+        frame = pd.DataFrame(data={'key': objects})
+        frame = frame.assign(vertex=frame['key'].str.rsplit('/', n=1, expand=True)[1])
+        self.__logger.info(frame)
