@@ -14,7 +14,7 @@ def main():
 
     # Setting Up
     setup = src.setup.Setup(service=service, s3_parameters=s3_parameters, warehouse=configurations.warehouse)
-    state = setup.exc(bucket_name=s3_parameters.internal, prefix=configurations.s3_prefix)
+    state = setup.exc(bucket_name=s3_parameters.internal, prefix=configurations.s3_internal_prefix)
     logger.info(state)
 
     # Hence
