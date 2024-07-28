@@ -21,7 +21,8 @@ class Interface:
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
-        :param s3_parameters:
+        :param s3_parameters: The overarching S3 (Simple Storage Service) parameters settings of this
+                              project, e.g., region code name, buckets, etc.
         """
 
         self.__service = service
