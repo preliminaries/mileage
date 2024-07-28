@@ -32,7 +32,7 @@ class Raw:
 
     def exc(self):
 
-        prefix = self.__configurations.s3_prefix + 'raw/'
+        prefix = self.__configurations.s3_internal_prefix + 'raw/'
 
         keys = src.s3.keys.Keys(service=self.__service, bucket_name=self.__s3_parameters.internal)
         objects: list[str] = keys.excerpt(prefix=prefix)
@@ -40,4 +40,7 @@ class Raw:
 
         frame = pd.DataFrame(data={'key': objects})
         frame = frame.assign(vertex=frame['key'].str.rsplit('/', n=1, expand=True)[1])
+        self.__logger.info(frame)
+
+        frame = frame.assign(filename= self.__configurations.raw_ + os.path.sep + frame['vertex'])
         self.__logger.info(frame)
