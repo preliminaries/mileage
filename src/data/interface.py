@@ -10,6 +10,7 @@ import src.data.raw
 import src.data.organisations
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
+import src.data.reading
 
 
 
@@ -48,5 +49,7 @@ class Interface:
             service=self.__service, s3_parameters=self.__s3_parameters).exc()
         self.__logger.info(raw)
 
-        tabs: np.ndarray = organisations['mileage-tab'].to_numpy()
+        tabs: np.ndarray = organisations['mileage_tab'].to_numpy()
         self.__logger.info(tabs)
+
+        src.data.reading.Reading().exc(tabs=tabs)
