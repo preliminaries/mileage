@@ -10,13 +10,21 @@ import numpy as np
 
 class Reading:
 
-    def __init__(self):
+    def __init__(self, file: str):
+        """
 
+        :param file:
+        """
+
+        self.__file = file
+
+        # An instance for interacting with spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
 
     def __sheet(self, sheet_name: str):
 
-        dictionary = {'sheet_name': sheet_name, 'header': 0, 'usecols': 'A:M'}
+        dictionary = {'io': self.__file,  'sheet_name': sheet_name,
+                      'header': 0, 'usecols': 'A:M'}
 
         return self.__spreadsheet._replace(**dictionary)
 
