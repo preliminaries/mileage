@@ -15,6 +15,7 @@ class Config:
         # Temporary local areas
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
         self.raw_ = os.path.join(self.warehouse, 'raw')
+        self.initial_ = os.path.join(self.warehouse, 'initial')
         self.points_ = os.path.join(self.warehouse, 'points')
 
         # A S3 parameters template
