@@ -4,6 +4,7 @@ import dask
 import pandas as pd
 
 import src.functions.xlsx
+import src.functions.streams
 import src.elements.sheet
 
 import numpy as np
@@ -29,6 +30,8 @@ class Reading:
 
         # An instance for interacting with spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
+
+        self.__streams = src.functions.streams.Streams()
 
     @dask.delayed
     def __sheet(self, sheet_name: str):
@@ -62,9 +65,11 @@ class Reading:
 
         readings = readings.rename(columns=self.__rename)
 
+        self.__streams.write(blob=readings, path='')
+
         return readings.head()
 
-    def exc(self, tabs: np.ndarray):
+    def exc(self, tabs: list[dict]):
         """
 
         :param tabs:
@@ -74,7 +79,7 @@ class Reading:
         computations = []
         for tab in tabs:
 
-            sheet = self.__sheet(sheet_name=tab)
+            sheet = self.__sheet(sheet_name=tab['mileage_tab'])
             readings = self.__read(sheet=sheet)
             excerpt = self.__temp(readings=readings)
             computations.append(excerpt)
