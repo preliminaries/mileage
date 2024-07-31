@@ -1,4 +1,3 @@
-import logging
 import os
 
 import pandas as pd
@@ -32,11 +31,6 @@ class Raw:
 
         # Configurations
         self.__configurations = config.Config()
-        
-        # Logging
-        logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
 
     def __keys(self) -> list[str]:
         """
