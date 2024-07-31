@@ -65,7 +65,7 @@ class Reading:
 
         readings = readings.rename(columns=self.__rename)
 
-        self.__streams.write(blob=readings, path='')
+        # self.__streams.write(blob=readings, path='')
 
         return readings.head()
 
