@@ -22,7 +22,7 @@ class Raw:
         :param service: A suite of services for interacting with Amazon Web Services.
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters settings of this
                               project, e.g., region code name, buckets, etc.
-        :param storage:
+        :param storage: The temporary storage hub of the raw files
         """
 
         self.__service = service
