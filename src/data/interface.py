@@ -4,6 +4,7 @@ Module interface.py
 import logging
 import os
 import glob
+from typing import Any, List
 
 import pandas as pd
 import numpy as np
@@ -55,8 +56,9 @@ class Interface:
             service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__storage).exc()
         self.__logger.info(raw)
 
-        tabs: np.ndarray = organisations['mileage_tab'].to_numpy()
-        self.__logger.info(tabs)
+        tabs: list[dict] = organisations[['organisation_id', 'mileage_tab']].to_dict(orient='records')
+        for tab in tabs:
+            self.__logger.info(tab['organisation_id'])
 
         file = glob.glob(pathname=os.path.join(self.__storage, '*.xlsx'))[0]
         src.data.reading.Reading(file=file).exc(tabs=tabs)
