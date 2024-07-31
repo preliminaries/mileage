@@ -18,10 +18,24 @@ class Reading:
 
         self.__file = file
 
+        # Rename
+        self.__rename = {'Area Pay Division': 'area_pay_division', 'Claim Line Start': 'claim_line_start',
+                         'Claim Line End': 'claim_line_end', 'Engine Size': 'engine_size',
+                         'Fuel Type': 'fuel_type', 'CO2 Emissions': 'co2_emissions',
+                         'Business Mileage': 'business_mileage', 'Business Rate High': 'business_rate_high',
+                         'Business Rate Low': 'business_rate_low', 'Business Value': 'business_value',
+                         'Commute Miles Not Undertaken': 'commute_miles_not_undertaken',
+                         'Overtime Mileage': 'overtime_mileage', 'Journey Details': 'journey_details'}
+
         # An instance for interacting with spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
 
     def __sheet(self, sheet_name: str):
+        """
+
+        :param sheet_name:
+        :return:
+        """
 
         dictionary = {'io': self.__file,  'sheet_name': sheet_name,
                       'header': 0, 'usecols': 'A:M'}
@@ -42,11 +56,27 @@ class Reading:
         except OSError as err:
             raise err from err
 
+    @dask.delayed
+    def __temp(self, readings: pd.DataFrame) -> pd.DataFrame:
+
+        readings = readings.rename(columns=self.__rename)
+
+        return readings.head()
+
     def exc(self, tabs: np.ndarray):
+        """
+
+        :param tabs:
+        :return:
+        """
 
         computations = []
         for tab in tabs:
 
             sheet = self.__sheet(sheet_name=tab)
             readings = self.__read(sheet=sheet)
-            dask.compute(readings.head())
+            excerpt = self.__temp(readings=readings)
+            computations.append(excerpt)
+
+        details = dask.compute(computations)[0]
+        print(details)
