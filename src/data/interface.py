@@ -6,6 +6,7 @@ import logging
 import pandas as pd
 import numpy as np
 
+import config
 import src.data.raw
 import src.data.organisations
 import src.elements.s3_parameters as s3p
@@ -30,6 +31,9 @@ class Interface:
         self.__service = service
         self.__s3_parameters = s3_parameters
 
+        # Configurations
+        self.__configurations = config.Config()
+
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                             datefmt='%Y-%m-%d %H:%M:%S')
@@ -46,10 +50,10 @@ class Interface:
         self.__logger.info(organisations)
 
         raw: list[str] = src.data.raw.Raw(
-            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+            service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__configurations.raw_).exc()
         self.__logger.info(raw)
 
         tabs: np.ndarray = organisations['mileage_tab'].to_numpy()
         self.__logger.info(tabs)
 
-        src.data.reading.Reading().exc(tabs=tabs)
+        # src.data.reading.Reading().exc(tabs=tabs)
