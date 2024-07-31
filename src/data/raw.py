@@ -1,3 +1,4 @@
+"""Module raw.py"""
 import os
 
 import pandas as pd
@@ -11,6 +12,9 @@ import src.s3.keys
 
 
 class Raw:
+    """
+    Class Raw
+    """
 
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, storage: str):
         """
