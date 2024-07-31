@@ -2,6 +2,8 @@
 Module interface.py
 """
 import logging
+import os
+import glob
 
 import pandas as pd
 import numpy as np
@@ -32,7 +34,7 @@ class Interface:
         self.__s3_parameters = s3_parameters
 
         # Configurations
-        self.__configurations = config.Config()
+        self.__storage = config.Config().raw_
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
@@ -50,10 +52,12 @@ class Interface:
         self.__logger.info(organisations)
 
         raw: list[str] = src.data.raw.Raw(
-            service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__configurations.raw_).exc()
+            service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__storage).exc()
         self.__logger.info(raw)
 
         tabs: np.ndarray = organisations['mileage_tab'].to_numpy()
         self.__logger.info(tabs)
+
+        file = glob.glob(pathname=os.path.join(self.__storage, '*.xlsx'))[0]
 
         # src.data.reading.Reading().exc(tabs=tabs)
