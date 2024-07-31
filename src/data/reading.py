@@ -30,6 +30,7 @@ class Reading:
         # An instance for interacting with spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
 
+    @dask.delayed
     def __sheet(self, sheet_name: str):
         """
 
