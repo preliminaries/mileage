@@ -1,3 +1,4 @@
+"""Module reading.py"""
 import dask
 
 import pandas as pd
@@ -11,15 +12,16 @@ class Reading:
 
     def __init__(self):
 
-        self.__sheet = src.elements.sheet.Sheet()
+        self.__spreadsheet = src.elements.sheet.Sheet()
 
-    def __attributes(self, sheet_name: str):
+    def __sheet(self, sheet_name: str):
 
         dictionary = {'sheet_name': sheet_name, 'header': 0, 'usecols': 'A:M'}
 
-        return self.__sheet._replace(**dictionary)
+        return self.__spreadsheet._replace(**dictionary)
 
-    def __read(self, sheet: src.elements.sheet.Sheet):
+    @dask.delayed
+    def __read(self, sheet: src.elements.sheet.Sheet) -> pd.DataFrame:
         """
 
         :param sheet: @ src.elements.sheet.Sheet
@@ -34,8 +36,9 @@ class Reading:
 
     def exc(self, tabs: np.ndarray):
 
+        computations = []
         for tab in tabs:
 
-            attributes = self.__attributes(sheet_name=tab)
-
-
+            sheet = self.__sheet(sheet_name=tab)
+            readings = self.__read(sheet=sheet)
+            dask.compute(readings.head())
