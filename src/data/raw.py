@@ -13,23 +13,26 @@ import src.s3.keys
 
 class Raw:
 
-    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, storage: str):
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters settings of this
                               project, e.g., region code name, buckets, etc.
+        :param storage:
         """
 
         self.__service = service
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
+        self.__storage = storage
 
-        # Configurations
-        self.__configurations = config.Config()
-        self.__storage = self.__configurations.raw_
+        # Storage
         src.functions.directories.Directories().create(
             path=self.__storage)
 
+        # Configurations
+        self.__configurations = config.Config()
+        
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                             datefmt='%Y-%m-%d %H:%M:%S')
