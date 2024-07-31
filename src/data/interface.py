@@ -59,5 +59,4 @@ class Interface:
         self.__logger.info(tabs)
 
         file = glob.glob(pathname=os.path.join(self.__storage, '*.xlsx'))[0]
-
-        # src.data.reading.Reading().exc(tabs=tabs)
+        src.data.reading.Reading(file=file).exc(tabs=tabs)
