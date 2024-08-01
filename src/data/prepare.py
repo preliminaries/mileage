@@ -1,4 +1,4 @@
-
+"""Module prepare.py"""
 import pandas as pd
 
 import config
@@ -11,6 +11,7 @@ class Prepare:
         Constructor
         """
 
+        # Configurations
         self.__configurations = config.Config()
 
     def exc(self, blob: pd.DataFrame, organisation_id: int) -> pd.DataFrame:
