@@ -24,10 +24,6 @@ class Reading:
         self.__file = glob.glob(pathname=os.path.join(raw_, '*.xlsx'))[0]
         self.__initial_ = initial_
 
-        # Storage
-        src.functions.directories.Directories().create(
-            path=self.__initial_)
-
         # Configurations
         self.__configurations = config.Config()
 
@@ -84,8 +80,14 @@ class Reading:
         :return:
         """
 
+        # Storage
+        src.functions.directories.Directories().create(
+            path=self.__initial_)
+
+        # Iterable
         tabs: list[dict] = organisations[['organisation_id', 'mileage_tab']].to_dict(orient='records')
 
+        # Hence
         computations = []
         for tab in tabs:
 
