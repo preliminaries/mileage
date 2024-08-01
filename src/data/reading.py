@@ -74,16 +74,16 @@ class Reading:
         return self.__prepare.exc(blob=blob, organisation_id=organisation_id)
 
     @dask.delayed
-    def __persist(self, readings: pd.DataFrame, organisation_id: int) -> str:
+    def __persist(self, blob: pd.DataFrame, organisation_id: int) -> str:
         """
 
-        :param readings: The data read from a spreadsheet; each spreadsheet records the data of a single organisation
+        :param blob: The data read from a spreadsheet; each spreadsheet records the data of a single organisation
         :param organisation_id: The identification code of the organisation whence the data came.
         :return:
         """
 
         message = self.__streams.write(
-            blob=readings, path=os.path.join(self.__initial_, f'{organisation_id}.csv'))
+            blob=blob, path=os.path.join(self.__initial_, f'{organisation_id}.csv'))
 
         return message
 
@@ -107,7 +107,8 @@ class Reading:
 
             sheet = self.__sheet(sheet_name=tab['mileage_tab'])
             readings = self.__read(sheet=sheet)
-            message = self.__persist(readings=readings, organisation_id=tab['organisation_id'])
+            blob = self.__preparing(blob=readings, organisation_id=tab['organisation_id'])
+            message = self.__persist(blob=blob, organisation_id=tab['organisation_id'])
             computations.append(message)
 
         details = dask.compute(computations)[0]
