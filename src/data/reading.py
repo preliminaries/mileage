@@ -10,6 +10,7 @@ import src.elements.sheet
 import src.functions.directories
 import src.functions.streams
 import src.functions.xlsx
+import src.data.prepare
 
 
 class Reading:
@@ -27,16 +28,18 @@ class Reading:
         # Configurations
         self.__configurations = config.Config()
 
-        # An instance for interacting with spreadsheets, and for
-        # writing CSV (comma separated values)
+        # An instance for interacting with spreadsheets, for
+        # writing CSV (comma separated values), for preparing the
+        # data extracted from the spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
         self.__streams = src.functions.streams.Streams()
+        self.__prepare = src.data.prepare.Prepare()
 
     @dask.delayed
     def __sheet(self, sheet_name: str):
         """
 
-        :param sheet_name: The name of a Excel document's sheet
+        :param sheet_name: The name of an Excel document's sheet
         :return:
         """
 
@@ -60,11 +63,22 @@ class Reading:
             raise err from err
 
     @dask.delayed
+    def __preparing(self, blob: pd.DataFrame, organisation_id: int) -> pd.DataFrame:
+        """
+
+        :param blob: The data read from a spreadsheet; it is the data of a single organisation.
+        :param organisation_id: The identification code of the organisation whence the data came.
+        :return:
+        """
+
+        return self.__prepare.exc(blob=blob, organisation_id=organisation_id)
+
+    @dask.delayed
     def __temp(self, readings: pd.DataFrame, organisation_id: int) -> str:
         """
 
         :param readings: The data read from a spreadsheet; each spreadsheet records the data of a single organisation
-        :param organisation_id: The identification code of the organisation whence the data came from
+        :param organisation_id: The identification code of the organisation whence the data came.
         :return:
         """
 
@@ -76,7 +90,7 @@ class Reading:
     def exc(self, organisations: pd.DataFrame):
         """
 
-        :param organisations: The inventory of organisations in focus
+        :param organisations: The inventory of organisations in focus.
         :return:
         """
 
