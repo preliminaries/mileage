@@ -35,7 +35,9 @@ class Interface:
         self.__s3_parameters = s3_parameters
 
         # Configurations
-        self.__storage = config.Config().raw_
+        configurations = config.Config()
+        self.__raw_ = configurations.raw_
+        self.__initial_ = configurations.initial_
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
@@ -55,12 +57,9 @@ class Interface:
 
         # Unload
         messages: list[str] = src.data.raw.Raw(
-            service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__storage).exc()
+            service=self.__service, s3_parameters=self.__s3_parameters, raw_=self.__raw_).exc()
         self.__logger.info(messages)
 
-        tabs: list[dict] = organisations[['organisation_id', 'mileage_tab']].to_dict(orient='records')
-        for tab in tabs:
-            self.__logger.info(tab['organisation_id'])
-
-        file = glob.glob(pathname=os.path.join(self.__storage, '*.xlsx'))[0]
-        src.data.reading.Reading(file=file).exc(tabs=tabs)
+        # Separately read & save spreadsheets
+        src.data.reading.Reading(
+            raw_=self.__raw_, initial_=self.__initial_).exc(organisations=organisations)
