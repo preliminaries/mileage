@@ -19,22 +19,22 @@ class Raw:
     Retrieves the mileage records file from Amazon S3
     """
 
-    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, storage: str):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, raw_: str):
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters settings of this
                               project, e.g., region code name, buckets, etc.
-        :param storage: The temporary storage hub of the raw files
+        :param raw_: The temporary storage hub of the raw files
         """
 
         self.__service = service
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
-        self.__storage = storage
+        self.__raw_ = raw_
 
         # Storage
         src.functions.directories.Directories().create(
-            path=self.__storage)
+            path=self.__raw_)
 
         # Configurations
         self.__configurations = config.Config()
@@ -66,7 +66,7 @@ class Raw:
         frame = frame.assign(vertex=frame['key'].str.rsplit('/', n=1, expand=True)[1])
 
         # This line construct's the local storage string of each file
-        frame = frame.assign(filename= self.__storage + os.path.sep + frame['vertex'])
+        frame = frame.assign(filename= self.__raw_ + os.path.sep + frame['vertex'])
 
         return frame
 
