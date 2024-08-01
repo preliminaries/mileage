@@ -5,6 +5,7 @@ import os
 import dask
 import pandas as pd
 
+import config
 import src.elements.sheet
 import src.functions.directories
 import src.functions.streams
@@ -27,10 +28,12 @@ class Reading:
         src.functions.directories.Directories().create(
             path=self.__initial_)
 
-        # An instance for interacting with spreadsheets
-        self.__spreadsheet = src.elements.sheet.Sheet()
+        # Configurations
+        self.__configurations = config.Config()
 
-        # An instance for writing CSV (comma separated values)
+        # An instance for interacting with spreadsheets, and for
+        # writing CSV (comma separated values)
+        self.__spreadsheet = src.elements.sheet.Sheet()
         self.__streams = src.functions.streams.Streams()
 
     @dask.delayed
@@ -41,8 +44,8 @@ class Reading:
         :return:
         """
 
-        dictionary = {'io': self.__file,  'sheet_name': sheet_name,
-                      'header': 0, 'usecols': 'A:M'}
+        dictionary = {'io': self.__file, 'sheet_name': sheet_name, 'header': 0,
+                      'usecols': 'A:M', 'dtype': self.__configurations.dtype}
 
         return self.__spreadsheet._replace(**dictionary)
 
