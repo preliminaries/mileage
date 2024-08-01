@@ -74,7 +74,7 @@ class Reading:
         return self.__prepare.exc(blob=blob, organisation_id=organisation_id)
 
     @dask.delayed
-    def __temp(self, readings: pd.DataFrame, organisation_id: int) -> str:
+    def __persist(self, readings: pd.DataFrame, organisation_id: int) -> str:
         """
 
         :param readings: The data read from a spreadsheet; each spreadsheet records the data of a single organisation
@@ -107,7 +107,7 @@ class Reading:
 
             sheet = self.__sheet(sheet_name=tab['mileage_tab'])
             readings = self.__read(sheet=sheet)
-            message = self.__temp(readings=readings, organisation_id=tab['organisation_id'])
+            message = self.__persist(readings=readings, organisation_id=tab['organisation_id'])
             computations.append(message)
 
         details = dask.compute(computations)[0]
