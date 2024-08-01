@@ -40,7 +40,7 @@ class Reading:
     def __sheet(self, sheet_name: str):
         """
 
-        :param sheet_name:
+        :param sheet_name: The name of a Excel document's sheet
         :return:
         """
 
@@ -65,6 +65,12 @@ class Reading:
 
     @dask.delayed
     def __temp(self, readings: pd.DataFrame, organisation_id: int) -> str:
+        """
+
+        :param readings: The data read from a spreadsheet; each spreadsheet records the data of a single organisation
+        :param organisation_id: The identification code of the organisation whence the data came from
+        :return:
+        """
 
         message = self.__streams.write(
             blob=readings, path=os.path.join(self.__initial_, f'{organisation_id}.csv'))
@@ -74,7 +80,7 @@ class Reading:
     def exc(self, organisations: pd.DataFrame):
         """
 
-        :param organisations:
+        :param organisations: The inventory of organisations in focus
         :return:
         """
 
