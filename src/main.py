@@ -12,12 +12,12 @@ def main():
     # Logging
     logger: logging.Logger = logging.getLogger(name=__name__)
 
-    # Setting Up
+    # Setting up Amazon services & resources
     setup = src.setup.Setup(service=service, s3_parameters=s3_parameters, warehouse=configurations.warehouse)
     state = setup.exc(bucket_name=s3_parameters.internal, prefix=configurations.s3_internal_prefix)
     logger.info(state)
 
-    # Hence
+    # Hence, run through the data steps
     src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Deleting __pycache__
@@ -45,8 +45,10 @@ if __name__ == '__main__':
     import src.s3.s3_parameters
     import src.setup
 
+    # Configurations
     configurations = config.Config()
 
+    # Anazon related instances
     s3_parameters = src.s3.s3_parameters.S3Parameters().exc()
     service = src.functions.service.Service(region_name=s3_parameters.region_name).exc()
 
