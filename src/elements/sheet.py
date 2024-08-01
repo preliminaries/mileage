@@ -34,3 +34,4 @@ class Sheet(typing.NamedTuple):
     skiprows: int = 0
     usecols: str = None
     nrows: int = None
+    dtype: dict = None
