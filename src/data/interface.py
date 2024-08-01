@@ -54,9 +54,9 @@ class Interface:
         self.__logger.info(organisations)
 
         # Unload
-        raw: list[str] = src.data.raw.Raw(
+        messages: list[str] = src.data.raw.Raw(
             service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__storage).exc()
-        self.__logger.info(raw)
+        self.__logger.info(messages)
 
         tabs: list[dict] = organisations[['organisation_id', 'mileage_tab']].to_dict(orient='records')
         for tab in tabs:
