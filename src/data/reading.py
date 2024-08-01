@@ -1,36 +1,36 @@
 """Module reading.py"""
-import dask
+import glob
+import os
 
+import dask
 import pandas as pd
 
-import src.functions.xlsx
-import src.functions.streams
 import src.elements.sheet
+import src.functions.directories
+import src.functions.streams
+import src.functions.xlsx
 
-import numpy as np
 
 class Reading:
 
-    def __init__(self, file: str):
+    def __init__(self, raw_: str, initial_:str):
         """
 
-        :param file:
+        :param raw_: The raw file's directory
+        :param initial_: The directory for the extracted spreadsheets data
         """
 
-        self.__file = file
+        self.__file = glob.glob(pathname=os.path.join(raw_, '*.xlsx'))[0]
+        self.__initial_ = initial_
 
-        # Rename
-        self.__rename = {'Area Pay Division': 'area_pay_division', 'Claim Line Start': 'claim_line_start',
-                         'Claim Line End': 'claim_line_end', 'Engine Size': 'engine_size',
-                         'Fuel Type': 'fuel_type', 'CO2 Emissions': 'co2_emissions',
-                         'Business Mileage': 'business_mileage', 'Business Rate High': 'business_rate_high',
-                         'Business Rate Low': 'business_rate_low', 'Business Value': 'business_value',
-                         'Commute Miles Not Undertaken': 'commute_miles_not_undertaken',
-                         'Overtime Mileage': 'overtime_mileage', 'Journey Details': 'journey_details'}
+        # Storage
+        src.functions.directories.Directories().create(
+            path=self.__initial_)
 
         # An instance for interacting with spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet()
 
+        # An instance for writing CSV (comma separated values)
         self.__streams = src.functions.streams.Streams()
 
     @dask.delayed
@@ -61,28 +61,30 @@ class Reading:
             raise err from err
 
     @dask.delayed
-    def __temp(self, readings: pd.DataFrame) -> pd.DataFrame:
+    def __temp(self, readings: pd.DataFrame, organisation_id: int) -> str:
 
-        readings = readings.rename(columns=self.__rename)
+        message = self.__streams.write(
+            blob=readings, path=os.path.join(self.__initial_, f'{organisation_id}.csv'))
 
-        # self.__streams.write(blob=readings, path='')
+        return message
 
-        return readings.head()
-
-    def exc(self, tabs: list[dict]):
+    def exc(self, organisations: pd.DataFrame):
         """
 
-        :param tabs:
+        :param organisations:
         :return:
         """
+
+        tabs: list[dict] = organisations[['organisation_id', 'mileage_tab']].to_dict(orient='records')
 
         computations = []
         for tab in tabs:
 
             sheet = self.__sheet(sheet_name=tab['mileage_tab'])
             readings = self.__read(sheet=sheet)
-            excerpt = self.__temp(readings=readings)
-            computations.append(excerpt)
+            message = self.__temp(readings=readings, organisation_id=tab['organisation_id'])
+            computations.append(message)
 
         details = dask.compute(computations)[0]
-        print(details)
+
+        return details
