@@ -14,6 +14,9 @@ import src.s3.keys
 class Raw:
     """
     Class Raw
+    ---------
+
+    Retrieves the mileage records file from Amazon S3
     """
 
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, storage: str):
@@ -39,7 +42,7 @@ class Raw:
     def __keys(self) -> list[str]:
         """
 
-        :return:
+        :return: A list of Amazon S3 (Simple Storage Service) keys
         """
 
         prefix = self.__configurations.s3_internal_prefix + 'raw/'
