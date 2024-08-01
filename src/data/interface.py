@@ -48,10 +48,12 @@ class Interface:
         :return:
         """
 
+        # The organisations whence the mileage records were requested
         organisations: pd.DataFrame = src.data.organisations.Organisations(
             service=self.__service, s3_parameters=self.__s3_parameters).exc()
         self.__logger.info(organisations)
 
+        # Unload
         raw: list[str] = src.data.raw.Raw(
             service=self.__service, s3_parameters=self.__s3_parameters, storage=self.__storage).exc()
         self.__logger.info(raw)
