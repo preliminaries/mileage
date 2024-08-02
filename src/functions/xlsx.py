@@ -25,8 +25,8 @@ class XLSX:
 
         try:
             return pd.read_excel(io=io.BytesIO(initial_bytes=buffer), sheet_name=sheet.sheet_name,
-                                 header=sheet.header, skiprows=sheet.skiprows, nrows=sheet.nrows,
-                                 usecols=sheet.usecols)
+                                 header=sheet.header, usecols=sheet.usecols, skiprows=sheet.skiprows,
+                                 parse_dates=sheet.parse_dates, dtype=sheet.dtype)
         except OSError as err:
             raise err from err
 
@@ -40,7 +40,7 @@ class XLSX:
 
         try:
             return pd.read_excel(io=sheet.io, sheet_name=sheet.sheet_name, header=sheet.header,
-                                 skiprows=sheet.skiprows, nrows=sheet.nrows, usecols=sheet.usecols,
-                                 engine='openpyxl')
+                                 usecols=sheet.usecols, skiprows=sheet.skiprows,
+                                 parse_dates=sheet.parse_dates, dtype=sheet.dtype, engine='openpyxl')
         except OSError as err:
             raise err from err
