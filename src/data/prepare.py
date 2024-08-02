@@ -23,6 +23,13 @@ class Prepare:
 
         return frame
 
+    def __fuel_type(self, blob: pd.DataFrame):
+
+        frame = blob.copy()
+        frame['fuel_type'] = frame['fuel_type'].map(self.__configurations.fuel_type)
+
+        return frame
+
     def exc(self, blob: pd.DataFrame, organisation_id: int) -> pd.DataFrame:
         """
 
