@@ -31,7 +31,9 @@ class Reading:
         # An instance for interacting with spreadsheets, for
         # writing CSV (comma separated values), for preparing the
         # data extracted from the spreadsheets
-        self.__spreadsheet = src.elements.sheet.Sheet()
+        self.__spreadsheet = src.elements.sheet.Sheet(
+            io='', sheet_name='', header=0, usecols='A:M', skiprows=0,
+            parse_dates=self.__configurations.parse_dates, dtype=self.__configurations.dtype)
         self.__streams = src.functions.streams.Streams()
         self.__prepare = src.data.prepare.Prepare()
 
@@ -43,8 +45,7 @@ class Reading:
         :return:
         """
 
-        dictionary = {'io': self.__file, 'sheet_name': sheet_name, 'header': 0,
-                      'usecols': 'A:M', 'dtype': self.__configurations.dtype}
+        dictionary = {'io': self.__file, 'sheet_name': sheet_name}
 
         return self.__spreadsheet._replace(**dictionary)
 
@@ -58,7 +59,8 @@ class Reading:
         try:
             # noinspection PyTypeChecker
             return pd.read_excel(io=sheet.io, sheet_name=sheet.sheet_name, header=sheet.header,
-                                 usecols=sheet.usecols, engine='openpyxl')
+                                 usecols=sheet.usecols, skiprows=sheet.skiprows,
+                                 parse_dates=sheet.parse_dates, dtype=sheet.dtype, engine='openpyxl')
         except OSError as err:
             raise err from err
 
