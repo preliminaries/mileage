@@ -41,4 +41,5 @@ class Config:
                       'Overtime Mileage': float, 'Journey Details': str}
 
         self.fuel_type = {'diesel': 'diesel', 'electric': 'electric', 'hybrid': 'hybrid',
-                          'petrol': 'unleaded', 'unleaded': 'unleaded', '': 'unknown'}
+                          'petrol': 'unleaded', 'unleaded': 'unleaded'}
+        self.fuel_type_else = 'unknown'
