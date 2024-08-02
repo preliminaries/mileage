@@ -17,6 +17,9 @@ class Config:
         self.raw_ = os.path.join(self.warehouse, 'raw')
         self.initial_ = os.path.join(self.warehouse, 'initial')
 
+        # Metadata
+        self.metadata_ = os.path.join(os.getcwd(), 'data', 'metadata.json')
+
         # A S3 parameters template
         self.s3_parameters_template = 'https://raw.githubusercontent.com/preliminaries/.github/master/profile/s3_parameters.yaml'
         self.s3_internal_prefix = 'mileage/'
