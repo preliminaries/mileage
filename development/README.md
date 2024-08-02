@@ -12,8 +12,10 @@ docker build . --file .devcontainer/Dockerfile -t mining
 Naming the new image `mining`.  Subsequently, use a container/instance of the image `mining` as a
 development environment via the command:
 
-> docker run [--rm](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the) [-i](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di) [-t](https://docs.docker.com/get-started/02_our_app/#:~:text=Finally%2C%20the-,%2Dt,-flag%20tags%20your) [-p](https://docs.docker.com/engine/reference/commandline/run/#:~:text=%2D%2Dpublish%20%2C-,%2Dp,-Publish%20a%20container%E2%80%99s) 127.0.0.1:10000:8888 -w /app \
-> &nbsp; &nbsp; --mount type=bind,src="$(pwd)",target=/app mining
+```bash
+docker run --rm -i -t -p 127.0.0.1:10000:8888 -w /app 
+  --mount type=bind,src="$(pwd)",target=/app mining
+```
 
 or
 
