@@ -1,4 +1,4 @@
-"""Module reading.py"""
+"""Module structuring.py"""
 import glob
 import os
 
@@ -13,7 +13,7 @@ import src.functions.xlsx
 import src.data.prepare
 
 
-class Reading:
+class Structuring:
 
     def __init__(self, raw_: str, initial_:str):
         """
