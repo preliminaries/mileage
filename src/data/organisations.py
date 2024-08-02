@@ -1,12 +1,9 @@
 """Module organisation.py"""
-import logging
-
 import pandas as pd
 
-import src.s3.csv
-
-import src.elements.service as sr
 import src.elements.s3_parameters as s3p
+import src.elements.service as sr
+import src.s3.csv
 
 
 class Organisations:
@@ -25,13 +22,10 @@ class Organisations:
         self.__service = service
         self.__s3_parameters = s3_parameters
 
-        # Logging
-        logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
-
     def __organisations(self) -> pd.DataFrame:
         """
+        Reads the organisations.csv file, which is hosted within
+        Amazon S3 (Simple Storage Service)
 
         :return:
         """
