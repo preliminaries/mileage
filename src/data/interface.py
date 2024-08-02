@@ -2,20 +2,16 @@
 Module interface.py
 """
 import logging
-import os
-import glob
-from typing import Any, List
 
 import pandas as pd
-import numpy as np
 
 import config
-import src.data.raw
+import src.data.dictionary
 import src.data.organisations
+import src.data.raw
+import src.data.reading
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
-import src.data.reading
-
 
 
 class Interface:
@@ -35,9 +31,9 @@ class Interface:
         self.__s3_parameters = s3_parameters
 
         # Configurations
-        configurations = config.Config()
-        self.__raw_ = configurations.raw_
-        self.__initial_ = configurations.initial_
+        self.__configurations = config.Config()
+        # self.__raw_ = configurations.raw_
+        # self.__initial_ = configurations.initial_
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
@@ -57,9 +53,16 @@ class Interface:
 
         # Unload
         messages: list[str] = src.data.raw.Raw(
-            service=self.__service, s3_parameters=self.__s3_parameters, raw_=self.__raw_).exc()
+            service=self.__service, s3_parameters=self.__s3_parameters, raw_=self.__configurations.raw_).exc()
         self.__logger.info(messages)
 
-        # Separately read & save spreadsheets
-        src.data.reading.Reading(
-            raw_=self.__raw_, initial_=self.__initial_).exc(organisations=organisations)
+        # Separately read & save the spreadsheets; as CSV (comma separated values) files
+        messages = src.data.reading.Reading(
+            raw_=self.__configurations.raw_, initial_=self.__configurations.initial_).exc(organisations=organisations)
+        self.__logger.info(type(messages))
+        self.__logger.info(messages)
+
+        # Transferring to Amazon S3
+        strings: pd.DataFrame = src.data.dictionary.Dictionary().exc(
+            path=self.__configurations.initial_, extension='csv', prefix=self.__configurations.s3_internal_prefix)
+        self.__logger.info(strings)
