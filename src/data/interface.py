@@ -41,20 +41,34 @@ class Interface:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
+    def __organisations(self) -> pd.DataFrame:
+        """
+        The organisations whence the mileage records were requested
+
+        :return:
+        """
+
+        return src.data.organisations.Organisations(
+            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+
+    def __unload(self) -> list[str]:
+        """
+
+        :return:
+        """
+
+        return src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters,
+                                raw_=self.__configurations.raw_).exc()
+
     def exc(self):
         """
 
         :return:
         """
 
-        # The organisations whence the mileage records were requested
-        organisations: pd.DataFrame = src.data.organisations.Organisations(
-            service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        self.__logger.info(organisations)
+        organisations = self.__organisations()
 
-        # Unload
-        messages: list[str] = src.data.raw.Raw(
-            service=self.__service, s3_parameters=self.__s3_parameters, raw_=self.__configurations.raw_).exc()
+        messages = self.__unload()
         self.__logger.info(messages)
 
         # Separately read & save the spreadsheets; as CSV (comma separated values) files
