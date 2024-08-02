@@ -2,12 +2,10 @@
 import glob
 import logging
 import os
-import pathlib
 
 import pandas as pd
 
 import config
-import src.functions.objects
 
 
 class Dictionary:
@@ -16,9 +14,6 @@ class Dictionary:
     """
 
     def __init__(self):
-        pass
-
-        self.__objects = src.functions.objects.Objects()
 
         self.__configurations = config.Config()
 
@@ -48,15 +43,6 @@ class Dictionary:
 
         return pd.DataFrame.from_records(details)
 
-    def __metadata(self) -> dict:
-        """
-
-        :param path: The metadata path string
-        :return:
-        """
-
-        return self.__objects.read(uri=self.__configurations.metadata_)
-
     def exc(self, path: str, extension: str, prefix: str) -> pd.DataFrame:
         """
 
@@ -66,11 +52,10 @@ class Dictionary:
         :return:
         """
 
+        # Inventory of files
         frame: pd.DataFrame = self.__local(path=path, extension=extension)
-        metadata = self.__metadata()
-        frame['metadata'] = metadata
 
         # Building the Amazon S3 strings
         frame = frame.assign(key=prefix + frame["vertex"])
 
-        return frame[['file', 'key', 'metadata']]
+        return frame[['file', 'key']]
