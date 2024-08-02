@@ -16,6 +16,11 @@ class Prepare:
 
     @staticmethod
     def __lower(blob: pd.DataFrame):
+        """
+
+        :param blob:
+        :return:
+        """
 
         frame: pd.DataFrame = blob.copy()
         for field in ['fuel_type', 'journey_details']:
@@ -24,6 +29,11 @@ class Prepare:
         return frame
 
     def __fuel_type(self, blob: pd.DataFrame):
+        """
+
+        :param blob:
+        :return:
+        """
 
         frame = blob.copy()
         frame['fuel_type'] = frame['fuel_type'].map(self.__configurations.fuel_type)
