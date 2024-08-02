@@ -1,31 +1,70 @@
 
 <br>
 
-### Notes
+## Remote Development Environment
 
-<table style="width: 65%;">
-    <colgroup>
-        <col span="1" style="width: 8.0%;">
-        <col span="1" style="width: 8.0%;">
-        <col span="1" style="width: 41.0%;">
-    </colgroup>
-    <thead><tr style="text-align: left">
-        <th>name</th><th>rename</th><th>notes</th></tr>
-    </thead>
-    <tr><td>Area Pay Division</td><td>area_pay_division</td><td>str</td></tr>
-    <tr><td>Claim Line Start</td><td>claim_line_start</td><td>From: yyyy/mm/dd $\rightarrow$ yyyy-mm-dd</td></tr>
-    <tr><td>Claim Line End</td><td>claim_line_end</td><td>From: yyyy/mm/dd $\rightarrow$ yyyy-mm-dd</td></tr>
-    <tr><td>Engine Size</td><td>engine_size</td><td><ul><li>float setting</li><li>The unit of measure is cubic centimetres.  It<br>is quite possible that some values are litres.</li></ul></td></tr>
-    <tr><td>Fuel Type</td><td>fuel_type</td><td><ul><li>str</li><li>set to lower case</li><li>ascertain categories: diesel, electric, <br>hybrid, unleaded, unknown</li></ul></td></tr>
-    <tr><td>$CO_{2}$ (Carbon<br>Dioxide) Emissions</td><td>co2_emissions</td><td><ul><li>float setting</li><li>The unit of measure is grams of carbon dioxide<br>per kilometre (gCO2/km).</li></ul></td></tr>
-    <tr><td>Business Mileage</td><td>business_mileage</td><td><ul><li>float setting</li><li>miles</li></ul></td></tr>
-    <tr><td>Business Rate High</td><td>business_rate_high</td><td><ul><li>float</li><li>pence per mile</li></ul></td></tr>
-    <tr><td>Business Rate Low</td><td>business_rate_low</td><td><ul><li>float</li><li>pence per mile</li></ul></td></tr>
-    <tr><td>Business Value</td><td>business_value</td><td><ul><li>float</li><li>pound sterling</li></ul></td></tr>
-    <tr><td>Commute Miles<br>Not Undertaken</td><td>commute_miles_not_undertaken</td><td><ul><li>float setting</li><li>miles</li></ul></td></tr>
-    <tr><td>Overtime Mileage</td><td>overtime_mileage</td><td><ul><li>float setting</li><li>miles</li></ul></td></tr>
-    <tr><td>Journey Details</td><td>journey_details</td><td><ul><li>str</li><li>set to lower case</li></ul></td></tr>
-</table>
+The environment's image is built via:
+
+```shell
+docker build . --file .devcontainer/Dockerfile -t mining
+```
+
+Naming the new image `mining`.  Subsequently, use a container/instance of the image `mining` as a
+development environment via the command:
+
+> docker run [--rm](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the) [-i](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di) [-t](https://docs.docker.com/get-started/02_our_app/#:~:text=Finally%2C%20the-,%2Dt,-flag%20tags%20your) [-p](https://docs.docker.com/engine/reference/commandline/run/#:~:text=%2D%2Dpublish%20%2C-,%2Dp,-Publish%20a%20container%E2%80%99s) 127.0.0.1:10000:8888 -w /app \
+> &nbsp; &nbsp; --mount type=bind,src="$(pwd)",target=/app mining
+
+or
+
+```bash
+docker run --rm -i -t -p 127.0.0.1:10000:8888 -w /app 
+  --mount type=bind,src="$(pwd)",target=/app -v ~/.aws:/root/.aws mining
+```
+
+Whereby:
+
+* [--rm](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the)
+* [-i](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di)
+* [-t](https://docs.docker.com/get-started/02_our_app/#:~:text=Finally%2C%20the-,%2Dt,-flag%20tags%20your)
+* [-p](https://docs.docker.com/engine/reference/commandline/run/#:~:text=%2D%2Dpublish%20%2C-,%2Dp,-Publish%20a%20container%E2%80%99s)
+
+
+Additionally, `-p 10000:8888` maps the host port `10000` to container port `8888`.  Note, the container's working environment,
+i.e., -w, must be inline with this project's top directory.  The latter, second, option is important for interactions
+with Amazon Web Services; **never deploy a root container, study the production** [Dockerfile](/Dockerfile); never deploy a development container with root settings.  Get the name of the running instance of `mining` via:
+
+```shell
+docker ps --all
+```
+
+A developer may attach an IDE (independent development environment) application to a running container.  Considering
+IntelliJ IDEA:
+
+> Connect to the Docker [daemon](https://www.jetbrains.com/help/idea/docker.html#connect_to_docker)
+> * **Settings** $\rightarrow$ **Build, Execution, Deployment** $\rightarrow$ **Docker** $\rightarrow$ **WSL:** `operating system`
+> * **View** $\rightarrow$ **Tool Window** $\rightarrow$ **Services** <br>Within the **Containers** section connect to the running instance of interest, or ascertain connection to the running instance of interest.
+
+Similarly, Visual Studio Code as its container attachment instructions; study [Attach Container](https://code.visualstudio.com/docs/devcontainers/attach-container).
+
+<br>
+
+
+## Development Notes
+
+The directive
+
+```shell
+pylint --generate-rcfile > .pylintrc
+```
+
+generates the dotfile `.pylintrc` of the static code analyser [pylint](https://pylint.pycqa.org/en/latest/user_guide/checkers/features.html).  Subsequently, analyse via
+
+```shell
+python -m pylint --rcfile .pylintrc ...
+```
+
+
 
 <br>
 <br>
