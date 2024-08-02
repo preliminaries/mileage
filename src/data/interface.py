@@ -102,6 +102,7 @@ class Interface:
         """
 
         organisations = self.__organisations()
+        self.__logger.info(organisations)
 
         messages = self.__unload()
         self.__logger.info(messages)
