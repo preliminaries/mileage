@@ -14,6 +14,15 @@ class Prepare:
         # Configurations
         self.__configurations = config.Config()
 
+    @staticmethod
+    def __lower(blob: pd.DataFrame):
+
+        frame: pd.DataFrame = blob.copy()
+        for field in ['fuel_type', 'journey_details']:
+            frame = frame.assign(field=frame[field].str.lower())
+
+        return frame
+
     def exc(self, blob: pd.DataFrame, organisation_id: int) -> pd.DataFrame:
         """
 
@@ -26,6 +35,9 @@ class Prepare:
 
         # Foremost, rename the fields; in line with naming conventions.
         frame = frame.copy().rename(columns=self.__configurations.rename)
+
+        # Lower
+        frame = self.__lower(blob=frame)
 
         # Next, append a source organisation identification code.
         frame = frame.assign(organisation_id=organisation_id)
