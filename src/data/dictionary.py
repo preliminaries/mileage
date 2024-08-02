@@ -6,6 +6,7 @@ import pathlib
 
 import pandas as pd
 
+import config
 import src.functions.objects
 
 
@@ -18,6 +19,8 @@ class Dictionary:
         pass
 
         self.__objects = src.functions.objects.Objects()
+
+        self.__configurations = config.Config()
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -45,20 +48,14 @@ class Dictionary:
 
         return pd.DataFrame.from_records(details)
 
-    def __metadata(self, path: str, vertices: list[str]) -> pd.DataFrame:
+    def __metadata(self) -> dict:
         """
 
-        :param path: The path wherein the files of interest lie
-        :param vertices: <file name> & <extension>
+        :param path: The metadata path string
         :return:
         """
 
-        details: list[dict] = [
-            {'vertex': vertex,
-             'metadata': self.__objects.read(uri=os.path.join(path, f'{pathlib.Path(vertex).stem}.json'))}
-            for vertex in vertices]
-
-        return pd.DataFrame.from_records(details)
+        return self.__objects.read(uri=self.__configurations.metadata_)
 
     def exc(self, path: str, extension: str, prefix: str) -> pd.DataFrame:
         """
@@ -69,9 +66,9 @@ class Dictionary:
         :return:
         """
 
-        local: pd.DataFrame = self.__local(path=path, extension=extension)
-        metadata: pd.DataFrame = self.__metadata(path=path, vertices=local['vertex'].tolist())
-        frame = local.copy().merge(metadata, how='left', on='vertex')
+        frame: pd.DataFrame = self.__local(path=path, extension=extension)
+        metadata = self.__metadata()
+        frame['metadata'] = metadata
 
         # Building the Amazon S3 strings
         frame = frame.assign(key=prefix + frame["vertex"])
