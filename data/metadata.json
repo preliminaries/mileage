@@ -1,0 +1,15 @@
+{
+  "area_pay_division": "The pay division code of an area. String format.",
+  "claim_line_start": "The start date of a claim. Date format yyyy-mm-dd.",
+  "claim_line_end": "The end date of a claim. Date format yyyy-mm-dd.",
+  "engine_size": "The engine size.  The unit of measure is cubic centimetres. It is quite possible that some values are litres.",
+  "fuel_type": "The fuel type.  String format.",
+  "co2_emissions": "The carbon dioxide emissions.  The unit of measure is grams of carbon dioxide per kilometre (gCO2/km).",
+  "business_mileage": "Business mileage.  Unit of measure miles.",
+  "business_rate_high": "Business rate high.  The upper boundary of the rate paid per mile.  The unit of measure is pence per mile.",
+  "business_rate_low": "Business rate low.  The lower boundary of the rate paid per mile.  The unit of measure is pence per mile.",
+  "business_value": "Business value.  This is the amount paid. The unit of measure is pound sterling.",
+  "commute_miles_not_undertaken": "Commute miles not undertaken.  Definition missing. The unit of measure is miles.",
+  "overtime_mileage": "Overtime mileage.  The unit of measure is miles.",
+  "journey_details": "Brief journey details."
+}
