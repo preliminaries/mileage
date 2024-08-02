@@ -1,6 +1,5 @@
 """Module ingress.py"""
 import logging
-import urllib.parse
 
 import botocore.exceptions
 import dask
