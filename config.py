@@ -39,3 +39,6 @@ class Config:
                       'Business Rate Low': float, 'Business Value': float,
                       'Commute Miles Not Undertaken': float,
                       'Overtime Mileage': float, 'Journey Details': str}
+
+        self.fuel_type = {'diesel': 'diesel', 'electric': 'electric', 'hybrid': 'hybrid',
+                          'petrol': 'unleaded', 'unleaded': 'unleaded', '': 'unknown'}
