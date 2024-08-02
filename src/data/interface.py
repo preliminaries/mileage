@@ -13,6 +13,7 @@ import src.data.structuring
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.objects
+import src.s3.ingress
 
 
 class Interface:
@@ -33,8 +34,6 @@ class Interface:
 
         # Configurations
         self.__configurations = config.Config()
-        # self.__raw_ = configurations.raw_
-        # self.__initial_ = configurations.initial_
 
         # Logging
         logging.basicConfig(level=logging.INFO, format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
@@ -60,6 +59,41 @@ class Interface:
         return src.data.raw.Raw(service=self.__service, s3_parameters=self.__s3_parameters,
                                 raw_=self.__configurations.raw_).exc()
 
+    def __structuring(self, organisations: pd.DataFrame) -> list[str]:
+        """
+        Separately read & save the spreadsheets; as CSV (comma separated values) files
+
+        :param organisations:
+        :return:
+        """
+
+        return src.data.structuring.Structuring(
+            raw_=self.__configurations.raw_, initial_=self.__configurations.initial_).exc(organisations=organisations)
+
+    def __strings(self) -> pd.DataFrame:
+        """
+
+        :return:
+        """
+
+        return src.data.dictionary.Dictionary().exc(
+            path=self.__configurations.initial_, extension='csv',
+            prefix=self.__configurations.s3_internal_prefix + 'initial/')
+
+
+    def __transferring(self):
+        """
+        Transferring to Amazon S3
+
+        :return:
+        """
+
+        metadata = src.functions.objects.Objects().read(
+            uri=self.__configurations.metadata_)
+
+        src.s3.ingress.Ingress(service=self.__service, bucket_name=self.__s3_parameters.internal)
+
+
     def exc(self):
         """
 
@@ -71,18 +105,9 @@ class Interface:
         messages = self.__unload()
         self.__logger.info(messages)
 
-        # Separately read & save the spreadsheets; as CSV (comma separated values) files
-        messages: list[str] = src.data.structuring.Structuring(
-            raw_=self.__configurations.raw_, initial_=self.__configurations.initial_).exc(organisations=organisations)
+        messages = self.__structuring(organisations=organisations)
         self.__logger.info(messages)
 
-        # Metadata
-        metadata = src.functions.objects.Objects().read(
-            uri=self.__configurations.metadata_)
-        self.__logger.info(metadata)
-
-        # Transferring to Amazon S3
-        strings: pd.DataFrame = src.data.dictionary.Dictionary().exc(
-            path=self.__configurations.initial_, extension='csv',
-            prefix=self.__configurations.s3_internal_prefix + 'initial/')
+        strings = self.__strings()
         self.__logger.info(strings)
+
