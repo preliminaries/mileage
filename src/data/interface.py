@@ -81,7 +81,7 @@ class Interface:
             prefix=self.__configurations.s3_internal_prefix + 'initial/')
 
 
-    def __transferring(self):
+    def __transferring(self, strings: pd.DataFrame) -> list[str]:
         """
         Transferring to Amazon S3
 
@@ -91,8 +91,9 @@ class Interface:
         metadata = src.functions.objects.Objects().read(
             uri=self.__configurations.metadata_)
 
-        src.s3.ingress.Ingress(service=self.__service, bucket_name=self.__s3_parameters.internal)
-
+        return src.s3.ingress.Ingress(
+            service=self.__service, bucket_name=self.__s3_parameters.internal).exc(
+            strings=strings, metadata=metadata)
 
     def exc(self):
         """
@@ -111,3 +112,5 @@ class Interface:
         strings = self.__strings()
         self.__logger.info(strings)
 
+        messages = self.__transferring(strings=strings)
+        self.__logger.info(messages)
