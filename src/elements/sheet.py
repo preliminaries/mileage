@@ -17,21 +17,24 @@ class Sheet(typing.NamedTuple):
     header : int
         The row number of the header row
 
+    usecols : str
+            "... comma separated list of Excel column letters and column ranges
+            (e.g. “A:E” or “A,C,E:F”). Ranges are inclusive of both sides."
+
     skiprows : int
         "Line numbers to skip (0-indexed) or number of lines to skip (int) ..."
 
-    usecols : str
-        "... comma separated list of Excel column letters and column ranges
-        (e.g. “A:E” or “A,C,E:F”). Ranges are inclusive of both sides."
+    parse_dates: list
+        The list of date fields to parse.
 
-    nrows : int
-        The number of rows to parse.
+    dtype: dict
+        A dictionary of fields, and their types.
     """
 
-    io: str = ''
-    sheet_name: str = None
-    header: int = None
-    skiprows: int = 0
-    usecols: str = None
-    nrows: int = None
-    dtype: dict = None
+    io: str
+    sheet_name: str
+    header: int
+    usecols: str
+    skiprows: int
+    parse_dates: list
+    dtype: dict
