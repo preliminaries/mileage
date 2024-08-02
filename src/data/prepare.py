@@ -56,6 +56,9 @@ class Prepare:
         # Convert the content of text fields to lower case
         frame = self.__lower(blob=frame)
 
+        # Update, correct, fuel type categories
+        frame = self.__fuel_type(blob=frame)
+
         # Next, append a source organisation identification code.
         frame = frame.assign(organisation_id=organisation_id)
 
