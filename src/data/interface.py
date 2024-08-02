@@ -102,16 +102,16 @@ class Interface:
         """
 
         organisations = self.__organisations()
-        self.__logger.info(organisations)
+        self.__logger.info('\nOrganisations\n%s', organisations)
 
         messages = self.__unload()
-        self.__logger.info(messages)
+        self.__logger.info('\nSuccessful Unloads\n%s', messages)
 
         messages = self.__structuring(organisations=organisations)
-        self.__logger.info(messages)
+        self.__logger.info('\nSuccessful Extracts (Saved)\n%s',messages)
 
         strings = self.__strings()
-        self.__logger.info(strings)
+        self.__logger.info('\nDetails for transferring extracts to Amazon\n%s', strings)
 
         messages = self.__transferring(strings=strings)
-        self.__logger.info(messages)
+        self.__logger.info('\nSuccessful Transfers\n%s', messages)
