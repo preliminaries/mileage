@@ -15,10 +15,10 @@ class Prepare:
         self.__configurations = config.Config()
 
     @staticmethod
-    def __lower(blob: pd.DataFrame):
+    def __lower(blob: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param blob:
+        :param blob: A dataframe of mileage data
         :return:
         """
 
@@ -28,7 +28,7 @@ class Prepare:
 
         return frame
 
-    def __fuel_type(self, blob: pd.DataFrame):
+    def __fuel_type(self, blob: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param blob: A dataframe of mileage data
