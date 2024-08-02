@@ -69,5 +69,6 @@ class Interface:
 
         # Transferring to Amazon S3
         strings: pd.DataFrame = src.data.dictionary.Dictionary().exc(
-            path=self.__configurations.initial_, extension='csv', prefix=self.__configurations.s3_internal_prefix)
+            path=self.__configurations.initial_, extension='csv',
+            prefix=self.__configurations.s3_internal_prefix + 'initial/')
         self.__logger.info(strings)
