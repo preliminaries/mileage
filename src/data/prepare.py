@@ -19,7 +19,7 @@ class Prepare:
 
         frame: pd.DataFrame = blob.copy()
         for field in ['fuel_type', 'journey_details']:
-            frame = frame.assign(field=frame[field].str.lower())
+            frame[field] = frame[field].str.lower()
 
         return frame
 
