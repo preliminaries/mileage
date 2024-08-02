@@ -36,7 +36,11 @@ class Prepare:
         """
 
         frame = blob.copy()
+
         frame['fuel_type'] = frame['fuel_type'].map(self.__configurations.fuel_type)
+
+        conditionals = ~frame['fuel_type'].isin(self.__configurations.fuel_type.values())
+        frame.loc[conditionals, 'fuel_type'] = self.__configurations.fuel_type_else
 
         return frame
 
