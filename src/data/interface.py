@@ -12,6 +12,7 @@ import src.data.raw
 import src.data.reading
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
+import src.functions.objects
 
 
 class Interface:
@@ -57,10 +58,14 @@ class Interface:
         self.__logger.info(messages)
 
         # Separately read & save the spreadsheets; as CSV (comma separated values) files
-        messages = src.data.reading.Reading(
+        messages: list[str] = src.data.reading.Reading(
             raw_=self.__configurations.raw_, initial_=self.__configurations.initial_).exc(organisations=organisations)
-        self.__logger.info(type(messages))
         self.__logger.info(messages)
+
+        # Metadata
+        metadata = src.functions.objects.Objects().read(
+            uri=self.__configurations.metadata_)
+        self.__logger.info(metadata)
 
         # Transferring to Amazon S3
         strings: pd.DataFrame = src.data.dictionary.Dictionary().exc(
