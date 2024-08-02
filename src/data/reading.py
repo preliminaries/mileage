@@ -108,6 +108,6 @@ class Reading:
             message = self.__persist(blob=blob, organisation_id=tab['organisation_id'])
             computations.append(message)
 
-        details = dask.compute(computations)[0]
+        messages = dask.compute(computations)[0]
 
-        return details
+        return messages
