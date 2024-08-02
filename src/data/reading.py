@@ -28,14 +28,15 @@ class Reading:
         # Configurations
         self.__configurations = config.Config()
 
-        # An instance for interacting with spreadsheets, for
-        # writing CSV (comma separated values), for preparing the
-        # data extracted from the spreadsheets
+        # An instance for interacting with spreadsheets, for writing CSV (comma separated values),
+        # for preparing the data extracted from the spreadsheets
         self.__spreadsheet = src.elements.sheet.Sheet(
             io='', sheet_name='', header=0, usecols='A:M', skiprows=0,
             parse_dates=self.__configurations.parse_dates, dtype=self.__configurations.dtype)
         self.__streams = src.functions.streams.Streams()
         self.__prepare = src.data.prepare.Prepare()
+
+        self.__xlsx = src.functions.xlsx.XLSX()
 
     @dask.delayed
     def __sheet(self, sheet_name: str):
@@ -56,13 +57,7 @@ class Reading:
         :param sheet: @ src.elements.sheet.Sheet
         """
 
-        try:
-            # noinspection PyTypeChecker
-            return pd.read_excel(io=sheet.io, sheet_name=sheet.sheet_name, header=sheet.header,
-                                 usecols=sheet.usecols, skiprows=sheet.skiprows,
-                                 parse_dates=sheet.parse_dates, dtype=sheet.dtype, engine='openpyxl')
-        except OSError as err:
-            raise err from err
+        return self.__xlsx.read(sheet=sheet)
 
     @dask.delayed
     def __preparing(self, blob: pd.DataFrame, organisation_id: int) -> pd.DataFrame:
