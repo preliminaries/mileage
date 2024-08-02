@@ -14,6 +14,9 @@ class Dictionary:
     """
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__configurations = config.Config()
 
