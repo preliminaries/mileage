@@ -63,7 +63,7 @@ class Interface:
         """
         Separately read & save the spreadsheets; as CSV (comma separated values) files
 
-        :param organisations:
+        :param organisations: The organisations whence the mileage records were requested
         :return:
         """
 
@@ -83,8 +83,9 @@ class Interface:
 
     def __transferring(self, strings: pd.DataFrame) -> list[str]:
         """
-        Transferring to Amazon S3
+        Transferring to Amazon S3 (Simple Storage Service)
 
+        :param strings: Details for transferring files to Amazon
         :return:
         """
 
