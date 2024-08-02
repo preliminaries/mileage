@@ -31,7 +31,7 @@ class Prepare:
     def __fuel_type(self, blob: pd.DataFrame):
         """
 
-        :param blob:
+        :param blob: A dataframe of mileage data
         :return:
         """
 
@@ -53,7 +53,7 @@ class Prepare:
         # Foremost, rename the fields; in line with naming conventions.
         frame = frame.copy().rename(columns=self.__configurations.rename)
 
-        # Lower
+        # Convert the content of text fields to lower case
         frame = self.__lower(blob=frame)
 
         # Next, append a source organisation identification code.
