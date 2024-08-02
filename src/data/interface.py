@@ -9,7 +9,7 @@ import config
 import src.data.dictionary
 import src.data.organisations
 import src.data.raw
-import src.data.reading
+import src.data.structuring
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.objects
@@ -72,7 +72,7 @@ class Interface:
         self.__logger.info(messages)
 
         # Separately read & save the spreadsheets; as CSV (comma separated values) files
-        messages: list[str] = src.data.reading.Reading(
+        messages: list[str] = src.data.structuring.Structuring(
             raw_=self.__configurations.raw_, initial_=self.__configurations.initial_).exc(organisations=organisations)
         self.__logger.info(messages)
 
