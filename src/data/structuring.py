@@ -14,6 +14,9 @@ import src.data.prepare
 
 
 class Structuring:
+    """
+    Class Structuring
+    """
 
     def __init__(self, raw_: str, initial_:str):
         """
@@ -28,34 +31,26 @@ class Structuring:
         # Configurations
         self.__configurations = config.Config()
 
-        # An instance for interacting with spreadsheets, for writing CSV (comma separated values),
-        # for preparing the data extracted from the spreadsheets
-        self.__spreadsheet = src.elements.sheet.Sheet(
-            io='', sheet_name='', header=0, usecols='A:M', skiprows=0,
+        # A spreadsheet data class
+        self.__sheet = src.elements.sheet.Sheet(
+            io=self.__file, sheet_name='', header=0, usecols='A:M', skiprows=0,
             parse_dates=self.__configurations.parse_dates, dtype=self.__configurations.dtype)
+
+        # An instance for interacting with spreadsheets, for writing
+        # CSV (comma separated values), for preparing the data extracted from the spreadsheets
+        self.__xlsx = src.functions.xlsx.XLSX()
         self.__streams = src.functions.streams.Streams()
         self.__prepare = src.data.prepare.Prepare()
 
-        self.__xlsx = src.functions.xlsx.XLSX()
-
     @dask.delayed
-    def __sheet(self, sheet_name: str):
+    def __read(self, sheet_name: str) -> pd.DataFrame:
         """
 
-        :param sheet_name: The name of an Excel document's sheet
-        :return:
+        :param sheet_name
         """
 
-        dictionary = {'io': self.__file, 'sheet_name': sheet_name}
-
-        return self.__spreadsheet._replace(**dictionary)
-
-    @dask.delayed
-    def __read(self, sheet: src.elements.sheet.Sheet) -> pd.DataFrame:
-        """
-
-        :param sheet: @ src.elements.sheet.Sheet
-        """
+        dictionary = {'sheet_name': sheet_name}
+        sheet = self.__sheet._replace(**dictionary)
 
         return self.__xlsx.read(sheet=sheet)
 
@@ -102,8 +97,7 @@ class Structuring:
         computations = []
         for tab in tabs:
 
-            sheet = self.__sheet(sheet_name=tab['mileage_tab'])
-            readings = self.__read(sheet=sheet)
+            readings = self.__read(sheet_name=tab['mileage_tab'])
             blob = self.__preparing(blob=readings, organisation_id=tab['organisation_id'])
             message = self.__persist(blob=blob, organisation_id=tab['organisation_id'])
             computations.append(message)
