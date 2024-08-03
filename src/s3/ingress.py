@@ -68,6 +68,6 @@ class Ingress:
         for string in strings.to_dict(orient='records'):
             message = self.__ingress(file=string['file'], key=string['key'], metadata=metadata)
             computations.append(message)
-        messages = dask.compute(computations, scheduler='threads')[0]
+        messages = dask.compute(computations, scheduler='processes')[0]
 
         return messages
