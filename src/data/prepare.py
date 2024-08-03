@@ -5,6 +5,10 @@ import config
 
 
 class Prepare:
+    """
+    Prepares the mileage data for exploratory analysis, modelling,
+    trend analysis, etc.
+    """
 
     def __init__(self):
         """
